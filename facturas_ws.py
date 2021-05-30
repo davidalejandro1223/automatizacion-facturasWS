@@ -1,8 +1,12 @@
 import unittest
 import json
+import locale
+from datetime import datetime
+
 from pyunitreport import HTMLTestRunner
 from selenium import webdriver
 
+locale.setlocale(locale.LC_TIME, 'es_CO.UTF-8')
 
 class FacturasWS(unittest.TestCase):
     def setUp(self):
@@ -92,7 +96,28 @@ class FacturasWS(unittest.TestCase):
             )
             remove_item_button.click()
 
-        breakpoint()
+        product_description_field = self.driver.find_element_by_xpath("/html/body/div[2]/div[4]/div[1]/div[2]/input")
+        product_description_field.clear()
+        product_description_field.send_keys(self.get_product_description())
+
+        fee_field = self.driver.find_element_by_xpath("/html/body/div[2]/div[4]/div/div[4]/input")
+        fee_field.click()
+        fee_field.send_keys(self.my_fees)
+
+        taxes_field = self.driver.find_element_by_xpath("/html/body/div[2]/div[6]/div/div[2]/div[2]/input")
+        taxes_field.clear()
+        taxes_field.send_keys(self.taxes)
+
+        currency_field = self.driver.find_element_by_xpath(f'//*[@id="currency"]/option[@value="{self.currency}"]')
+        currency_field.click()
+
+        download_field = self.driver.find_element_by_xpath('//div[@class="submibtn"]/button')
+        download_field.click()
+    
+    def get_product_description(self):
+        separator = "-"
+        month_year = datetime.now().strftime("%B %Y")
+        return separator.join([self.my_position, self.my_area, month_year])
 
     def tearDown(self):
         pass

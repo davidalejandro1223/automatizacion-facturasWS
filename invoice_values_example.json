@@ -8,5 +8,10 @@
     "my_address": "",
     "my_city": "",
     "my_province": "",
-    "my_country": ""
+    "my_country": "",
+    "my_position": "",
+    "my_area": "",
+    "my_fees": 0,
+    "taxes": 0,
+    "currency": ""
 }

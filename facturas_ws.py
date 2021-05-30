@@ -104,7 +104,7 @@ class FacturasWS(unittest.TestCase):
         fee_field.click()
         fee_field.send_keys(self.my_fees)
 
-        taxes_field = self.driver.find_element_by_xpath("/html/body/div[2]/div[6]/div/div[2]/div[2]/input")
+        taxes_field = self.driver.find_element_by_xpath('//div[@class="grand-vat"]/input')
         taxes_field.clear()
         taxes_field.send_keys(self.taxes)
 

@@ -1,17 +1,19 @@
 import unittest
 import json
 import locale
+import logging
 from datetime import datetime
 
 from pyunitreport import HTMLTestRunner
 from selenium import webdriver
+from selenium.common.exceptions import WebDriverException
 
 locale.setlocale(locale.LC_TIME, 'es_CO.UTF-8')
 
 class FacturasWS(unittest.TestCase):
     def setUp(self):
         self.set_invoice_values()
-        self.driver = webdriver.Chrome()
+        self.driver = self.get_driver()
         self.driver.maximize_window()
         self.driver.implicitly_wait(10)
         self.driver.get("https://facturas.ws/")
@@ -21,6 +23,33 @@ class FacturasWS(unittest.TestCase):
             values = json.load(f)
         for key, value in values.items():
             setattr(self, key, value)
+    
+    def get_driver(self, browser_name=None):
+        drivers = {
+            "firefox": self.get_firefox_driver,
+            "chrome": self.get_chrome_driver,
+        }
+        if browser_name:
+            return drivers[browser_name]()
+        
+        for method in drivers.values():
+            try:
+                return method()
+            except Exception as e:
+                logging.warning(e)
+        raise Exception("No existe ningún webdriver instalado")
+    
+    def get_firefox_driver(self):
+        try:
+            return webdriver.Firefox()
+        except:
+            raise Exception("No se encontró el webdriver para firefox (geckodriver)")
+
+    def get_chrome_driver(self):
+        try:
+            return webdriver.Chrome()
+        except WebDriverException: 
+            raise Exception("No se encontró el webdriver para chrome (chromedriver)")
 
     def test_client_name(self):
         client_name_field = self.driver.find_element_by_xpath(

@@ -2,6 +2,7 @@ import unittest
 import json
 import locale
 import logging
+import calendar
 from datetime import datetime
 
 from pyunitreport import HTMLTestRunner
@@ -52,9 +53,16 @@ class FacturasWS(unittest.TestCase):
             raise Exception("No se encontró el webdriver para chrome (chromedriver)")
 
     def test_client_name(self):
+        due_date_field = self.driver.find_element_by_xpath(
+            '//div/input[@class="inv-due-date"]'
+        )
+        due_date_field.clear()
+        due_date_field.send_keys(self.get_due_date())
+
         client_name_field = self.driver.find_element_by_xpath(
             "/html/body/div[2]/div[2]/div[1]/div/ul/li[1]/input"
         )
+        client_name_field.click()
         client_name_field.clear()
         client_name_field.send_keys(self.client_name)
 
@@ -147,7 +155,12 @@ class FacturasWS(unittest.TestCase):
         separator = "-"
         month_year = datetime.now().strftime("%B %Y")
         return separator.join([self.my_position, self.my_area, month_year])
-
+    
+    def get_due_date(self):
+        now = datetime.now()
+        month_last_day = calendar.monthrange(now.year, now.month)[1]
+        return now.replace(day=month_last_day).strftime("%m/%d/%Y")
+    
     def tearDown(self):
         pass
 

@@ -118,15 +118,23 @@ class FacturasWS(unittest.TestCase):
         )
         my_country_field.click()
 
+        ads = self.driver.find_elements_by_xpath('//div[@class="google-auto-placed"]')
+        for ad in ads:
+            try:
+                self.driver.execute_script("arguments[0].remove()", ad)
+            except:
+                pass
+        
         invoice_items = self.driver.find_elements_by_xpath(
             '//div[@id="invoice-items"]/div'
         )
+        
         for item in invoice_items:
             if item.get_attribute("data-divid") == "1":
                 continue
-            
+                
             remove_item_button = item.find_element_by_xpath(
-                f'//*[@id="invoice-items"]/div[2]/div[@class="remove-row"]'
+                f'//div[@id="invoice-items"]/div[2]/div[@class="remove-row"]'
             )
             self.driver.execute_script(
                 "arguments[0].style='display: block;'", remove_item_button

@@ -60,61 +60,61 @@ class FacturasWS(unittest.TestCase):
         due_date_field.send_keys(self.get_due_date())
 
         client_name_field = self.driver.find_element_by_xpath(
-            "/html/body/div[2]/div[2]/div[1]/div/ul/li[1]/input"
+            '//input[@name="client-name"]'
         )
         client_name_field.click()
         client_name_field.clear()
         client_name_field.send_keys(self.client_name)
 
         client_address_field = self.driver.find_element_by_xpath(
-            "/html/body/div[2]/div[2]/div[1]/div/ul/li[2]/textarea"
+            '//textarea[@name="client-address"]'
         )
         client_address_field.clear()
         client_address_field.send_keys(self.client_address)
 
         client_province_field = self.driver.find_element_by_xpath(
-            "/html/body/div[2]/div[2]/div[1]/div/ul/li[3]/input[1]"
+            '//input[@name="client-city"]'
         )
         client_province_field.clear()
         client_province_field.send_keys(self.client_province)
 
         client_city_field = self.driver.find_element_by_xpath(
-            "/html/body/div[2]/div[2]/div[1]/div/ul/li[3]/input[2]"
+            '//input[@name="client-state"]'
         )
         client_city_field.clear()
         client_city_field.send_keys(self.client_city)
 
         client_country_field = self.driver.find_element_by_xpath(
-            f'/html/body/div[2]/div[2]/div[1]/div/ul/li[5]/select/option[@value="{self.client_country}"]'
+            f'//select[@name="client-country"]/option[@value="{self.client_country}"]'
         )
         client_country_field.click()
 
         my_name_field = self.driver.find_element_by_xpath(
-            "/html/body/div[2]/div[2]/div[2]/div[2]/ul/li[1]/input"
+            '//input[@name="company-name"]'
         )
         my_name_field.clear()
         my_name_field.send_keys(self.my_name)
 
         my_address_field = self.driver.find_element_by_xpath(
-            "/html/body/div[2]/div[2]/div[2]/div[2]/ul/li[2]/textarea"
+            '//textarea[@name="company-address"]'
         )
         my_address_field.clear()
         my_address_field.send_keys(self.my_address)
 
         my_city_field = self.driver.find_element_by_xpath(
-            "/html/body/div[2]/div[2]/div[2]/div[2]/ul/li[3]/input[1]"
+            '//input[@name="company-city"]'
         )
         my_city_field.clear()
         my_city_field.send_keys(self.my_city)
 
         my_province_field = self.driver.find_element_by_xpath(
-            "/html/body/div[2]/div[2]/div[2]/div[2]/ul/li[3]/input[2]"
+            '//input[@name="company-state"]'
         )
         my_province_field.clear()
         my_province_field.send_keys(self.my_province)
 
         my_country_field = self.driver.find_element_by_xpath(
-            f'/html/body/div[2]/div[2]/div[2]/div[2]/ul/li[4]/select/option[@value="{self.my_country}"]'
+            f'//select[@name="company-country"]/option[@value="{self.my_country}"]'
         )
         my_country_field.click()
 
@@ -141,11 +141,11 @@ class FacturasWS(unittest.TestCase):
             )
             remove_item_button.click()
 
-        product_description_field = self.driver.find_element_by_xpath("/html/body/div[2]/div[4]/div[1]/div[2]/input")
+        product_description_field = self.driver.find_element_by_xpath('//div[@class="item-cell"]/input')
         product_description_field.clear()
         product_description_field.send_keys(self.get_product_description())
 
-        fee_field = self.driver.find_element_by_xpath("/html/body/div[2]/div[4]/div/div[4]/input")
+        fee_field = self.driver.find_element_by_xpath('//div[@class="price-cell"]/input')
         fee_field.click()
         fee_field.send_keys(self.my_fees)
 

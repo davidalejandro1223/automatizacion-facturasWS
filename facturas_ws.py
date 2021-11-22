@@ -3,6 +3,7 @@ import json
 import locale
 import logging
 import calendar
+import os
 from datetime import datetime
 
 from pyunitreport import HTMLTestRunner
@@ -10,6 +11,7 @@ from selenium import webdriver
 from selenium.common.exceptions import WebDriverException
 
 locale.setlocale(locale.LC_TIME, 'es_CO.UTF-8')
+DOWNLOAD_FOLDER = '~/Descargas/'
 
 class FacturasWS(unittest.TestCase):
     def setUp(self):
@@ -41,9 +43,16 @@ class FacturasWS(unittest.TestCase):
         raise Exception("No existe ningún webdriver instalado")
     
     def get_firefox_driver(self):
+        profile = webdriver.FirefoxProfile()
+        profile.set_preference("browser.download.folderList", 2)
+        profile.set_preference("browser.download.manager.showWhenStarting", False)
+        profile.set_preference("browser.helperApps.alwaysAsk.force", False)
+        profile.set_preference("browser.download.dir", DOWNLOAD_FOLDER)
+        profile.set_preference("browser.helperApps.neverAsk.saveToDisk", "application/pdf")
+        profile.set_preference("pdfjs.disabled", True)
         try:
-            return webdriver.Firefox()
-        except:
+            return webdriver.Firefox(firefox_profile=profile)
+        except WebDriverException:
             raise Exception("No se encontró el webdriver para firefox (geckodriver)")
 
     def get_chrome_driver(self):
@@ -53,6 +62,12 @@ class FacturasWS(unittest.TestCase):
             raise Exception("No se encontró el webdriver para chrome (chromedriver)")
 
     def test_client_name(self):
+        invoice_num_field = self.driver.find_element_by_xpath(
+            '//div/input[@class="inv-number"]'
+        )
+        invoice_num_field.clear()
+        invoice_num_field.send_keys(self.invoice_num)
+        
         due_date_field = self.driver.find_element_by_xpath(
             '//div/input[@class="inv-due-date"]'
         )
@@ -170,8 +185,12 @@ class FacturasWS(unittest.TestCase):
         return now.replace(day=month_last_day).strftime("%m/%d/%Y")
     
     def tearDown(self):
-        pass
-
+        with open("invoice_values.json", "r") as f:
+            values = json.load(f)
+        with open("invoice_values.json", "w", encoding="utf-8") as f:
+            values["invoice_num"] = self.invoice_num+1
+            f.write(json.dumps(values, ensure_ascii=False))
+        super().tearDown()
 
 if __name__ == "__main__":
     unittest.main(

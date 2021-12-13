@@ -3,6 +3,7 @@ import json
 import locale
 import logging
 import calendar
+import time
 from datetime import datetime
 
 from pyunitreport import HTMLTestRunner
@@ -158,6 +159,9 @@ class FacturasWS(unittest.TestCase):
 
         download_field = self.driver.find_element_by_xpath('//div[@class="submibtn"]/button')
         download_field.click()
+
+        #TODO: Usar explicit wait para esperar hasta que descargue el archivo PDF
+        time.sleep(5)
     
     def get_product_description(self):
         separator = "-"
@@ -170,7 +174,7 @@ class FacturasWS(unittest.TestCase):
         return now.replace(day=month_last_day).strftime("%m/%d/%Y")
     
     def tearDown(self):
-        pass
+        super().tearDown()
 
 
 if __name__ == "__main__":
